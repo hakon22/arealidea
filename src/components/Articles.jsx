@@ -1,68 +1,65 @@
-import { Formik, Form, Field } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { useEffect, useContext, useState } from 'react';
-import * as Yup from 'yup';
-import cn from 'classnames';
-import { fetchToken } from '../slices/loginSlice.js';
-import AuthContext from './Context.jsx';
+import { useFormik } from 'formik';
+import { Button, Form, FloatingLabel } from 'react-bootstrap';
+import axios from 'axios';
 
-const LoginForm = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { loggedIn, logIn } = useContext(AuthContext);
-  const [storeErrors, setErrors] = useState(null);
-
-  const SignupSchema = Yup.object().shape({
-    username: Yup.string().required(t('validation.required')),
-    password: Yup.string().required(t('validation.required')),
+const Articles = () => {
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      task: '',
+    },
+    onSubmit: async (values) => {
+      const res = await axios.post('http://localhost:3001/api/tasksAdd', values);
+      console.log(res);
+    },
   });
 
-  useEffect(() => {
-    if (loggedIn) {
-      window.location.replace('/');
-    }
-  }, [loggedIn, storeErrors]);
   return (
-    <Formik
-      initialValues={{
-        username: '',
-        password: '',
-      }}
-      validationSchema={SignupSchema}
-      onSubmit={async (values) => {
-        const { meta: { requestStatus } } = await dispatch(fetchToken(values));
-        if (requestStatus === 'fulfilled') {
-          logIn();
-        } else {
-          setErrors(t('validation.loginFailed'));
-        }
-      }}
+    <Form
+      onSubmit={formik.handleSubmit}
+      className="w-50"
     >
-      {({ errors }) => {
-        const styleInput = cn('form-control', {
-          'is-invalid': storeErrors,
-        });
-        return (
-          <Form className="col-12 col-md-6 mt-3 mt-mb-0">
-            <h1 className="text-center mb-4">{t('to_come')}</h1>
-            <div className="form-floating mb-3">
-              <Field id="username" autoFocus name="username" className={styleInput} placeholder={t('you_nick')} required />
-              <label htmlFor="username">{t('you_nick')}</label>
-              {errors.username && <div className="invalid-tooltip">{errors.username}</div>}
-            </div>
-            <div className="form-floating mb-4">
-              <Field name="password" id="password" type="password" className={styleInput} placeholder={t('you_pass')} required />
-              <label htmlFor="password">{t('you_pass')}</label>
-              {storeErrors && !errors.password && <div className="invalid-tooltip">{storeErrors}</div>}
-              {errors.password && <div className="invalid-tooltip">{errors.password}</div>}
-            </div>
-            <button className="w-100 mb-3 btn btn-outline-primary" type="submit">{t('to_come')}</button>
-          </Form>
-        );
-      }}
-    </Formik>
+      <h1 className="text-center mb-4">Добавление задачи</h1>
+      <Form.Group className="form-floating mb-3" controlId="title">
+        <FloatingLabel className={formik.values.title && 'filled'} label="Заголовок" controlId="title">
+          <Form.Control
+            className="mb-2"
+            onChange={formik.handleChange}
+            value={formik.values.title}
+            autoFocus
+            disabled={formik.isSubmitting}
+            isInvalid={formik.errors.title && formik.touched.title}
+            onBlur={formik.handleBlur}
+            name="title"
+            placeholder="Введите заголовой задачи"
+            required
+          />
+          <Form.Control.Feedback type="invalid" tooltip placement="right">
+            {formik.errors.password}
+          </Form.Control.Feedback>
+        </FloatingLabel>
+      </Form.Group>
+      <Form.Group className="form-floating mb-3" controlId="task">
+        <FloatingLabel className={formik.values.task && 'filled'} label="Задача" controlId="task">
+          <Form.Control
+            className="mb-2"
+            onChange={formik.handleChange}
+            value={formik.values.task}
+            disabled={formik.isSubmitting}
+            isInvalid={formik.errors.task && formik.touched.task}
+            onBlur={formik.handleBlur}
+            name="task"
+            placeholder="Введите задачу"
+            required
+          />
+          <Form.Control.Feedback type="invalid" tooltip placement="right">
+            {formik.errors.task}
+          </Form.Control.Feedback>
+        </FloatingLabel>
+      </Form.Group>
+      <Button variant="outline-primary" className="w-100" type="submit">Добавить</Button>
+    </Form>
   );
 };
 
-export default LoginForm;
+export default Articles;

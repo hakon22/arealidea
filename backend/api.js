@@ -1,19 +1,46 @@
 const express = require('express');
-const { Sequelize } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname');
-const db = sequelize;
+const db = new Sequelize('postgres://postgres:hakonpass@localhost:5432/test');
 
 const router = express.Router();
 
-router.post('/users/:id', async (req, res) => {
+const Tasks = db.define(
+  'Tasks',
+  {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    task: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+);
+
+Tasks.sync();
+
+router.post('/api/tasksAdd', async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await db.fetchUserById(id);
-    res.status(200).json(user);
+    const { title, task } = req.body;
+    const todo = await Tasks.create({ title, task });
+    console.log(todo);
+    res.status(200).send(todo);
   } catch (e) {
     res.sendStatus(500);
   }
 });
 
 module.exports = router;
+
+const app = async () => {
+  try {
+    await db.authenticate();
+    console.log('Соединение с БД было успешно установлено');
+  } catch (e) {
+    console.log('Невозможно выполнить подключение к БД: ', e);
+  }
+};
+
+app();
