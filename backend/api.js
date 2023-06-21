@@ -1,31 +1,63 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const { Sequelize, DataTypes } = require('sequelize');
-
-const db = new Sequelize('postgres://postgres:hakonpass@localhost:5432/test');
 
 const router = express.Router();
 
-const Tasks = db.define(
-  'Tasks',
+const jsonParser = bodyParser.json();
+// const urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+const db = new Sequelize('postgres://hakon:hakonpass@localhost:5432/test');
+
+const Articles = db.define(
+  'Articles',
   {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    task: {
+    article: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
 );
 
-Tasks.sync();
-
-router.post('/api/tasksAdd', async (req, res) => {
+const connect = async () => {
   try {
-    const { title, task } = req.body;
-    const todo = await Tasks.create({ title, task });
-    console.log(todo);
+    await db.authenticate();
+    await Articles.sync();
+    console.log('Соединение с БД было успешно установлено');
+  } catch (e) {
+    console.log('Невозможно выполнить подключение к БД: ', e);
+  }
+};
+
+connect();
+
+router.post('/api/article-add', jsonParser, async (req, res) => {
+  try {
+    const { title, article } = req.body;
+    const todo = await Articles.create({ title, article });
+    res.status(200).send(todo);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+router.get('/api/article-delete/:id', jsonParser, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Articles.destroy({ where: { id } });
+    res.status(200).sendStatus(201);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+router.get('/api/article-all', jsonParser, async (req, res) => {
+  try {
+    const todo = await Articles.findAll();
     res.status(200).send(todo);
   } catch (e) {
     res.sendStatus(500);
@@ -33,14 +65,3 @@ router.post('/api/tasksAdd', async (req, res) => {
 });
 
 module.exports = router;
-
-const app = async () => {
-  try {
-    await db.authenticate();
-    console.log('Соединение с БД было успешно установлено');
-  } catch (e) {
-    console.log('Невозможно выполнить подключение к БД: ', e);
-  }
-};
-
-app();
