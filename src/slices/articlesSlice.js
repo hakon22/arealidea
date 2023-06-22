@@ -1,23 +1,21 @@
 import axios from 'axios';
 import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-import routes from '../pages/routes.js';
+// import routes from '../pages/routes.js';
 
 export const fetchLoading = createAsyncThunk(
-  'token/fetchLoading',
-  async (token) => {
-    const response = await axios.get(routes.data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
+  'loading/fetchLoading',
+  async () => {
+    const res = await axios.get('http://localhost:3001/api/article-all');
+    return res.data;
   },
 );
 
 const loadingAdapter = createEntityAdapter({});
 
 const loadingSlice = createSlice({
-  name: 'loading',
+  name: 'articles',
   initialState: {
-    loadingStatus: 'idle', error: null, channels: [], messages: [],
+    loadingStatus: 'idle', error: null, ids: [], entities: {},
   },
   reducers: {
     addMessage: (state, { payload }) => {
@@ -49,13 +47,9 @@ const loadingSlice = createSlice({
         state.loadingStatus = 'loading';
         state.error = null;
       })
-      .addCase(fetchLoading.fulfilled, (state, {
-        payload:
-        { channels, messages, currentChannelId },
-      }) => {
-        state.channels = channels;
-        state.messages = messages;
-        state.currentChannelId = currentChannelId;
+      .addCase(fetchLoading.fulfilled, (state, { payload }) => {
+        state.entities = payload;
+        state.ids = payload.map((value) => value.id);
         state.loadingStatus = 'finish';
         state.error = null;
       })
@@ -66,6 +60,6 @@ const loadingSlice = createSlice({
   },
 });
 
-export const selectors = loadingAdapter.getSelectors((state) => state.loading);
+export const selectors = loadingAdapter.getSelectors((state) => state.articles);
 export const { actions } = loadingSlice;
 export default loadingSlice.reducer;
