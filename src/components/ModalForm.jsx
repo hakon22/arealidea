@@ -3,6 +3,7 @@ import {
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import routes from '../routes.js';
 
 const ModalForm = (props) => {
   const formik = useFormik({
@@ -11,7 +12,7 @@ const ModalForm = (props) => {
       article: '',
     },
     onSubmit: async (values) => {
-      const res = await axios.post('http://localhost:3001/api/article-add', values);
+      const res = await axios.post(routes.add, values);
       console.log(res);
     },
   });

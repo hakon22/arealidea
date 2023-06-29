@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-// import routes from '../pages/routes.js';
+import routes from '../routes.js';
 
 export const fetchLoading = createAsyncThunk(
   'loading/fetchLoading',
   async () => {
-    const res = await axios.get('http://localhost:3001/api/article-all');
+    const res = await axios.get(routes.all);
     return res.data;
   },
 );
