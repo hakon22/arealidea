@@ -76,14 +76,14 @@ const ModalForm = (props) => {
               </Form.Control.Feedback>
             </FloatingLabel>
           </Form.Group>
+          <Modal.Footer>
+            <div className="col-9">
+              <Button variant="primary" className="w-100" type="submit">Добавить</Button>
+            </div>
+            <Button variant="secondary" onClick={onHide}>Закрыть</Button>
+          </Modal.Footer>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <div className="col-9">
-          <Button variant="primary" className="w-100" type="submit">Добавить</Button>
-        </div>
-        <Button variant="secondary" onClick={onHide}>Закрыть</Button>
-      </Modal.Footer>
     </Modal>
   );
 };

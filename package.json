@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "start": "node server.js",
-    "postinstall": "cd frontend && npm i"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",

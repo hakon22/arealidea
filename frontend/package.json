@@ -16,7 +16,6 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
-    "backend": "file:..",
     "bootstrap": "^5.3.0",
     "classnames": "^2.3.2",
     "formik": "^2.4.2",
