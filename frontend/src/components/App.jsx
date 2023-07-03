@@ -5,8 +5,14 @@ import News from './News.jsx';
 
 const App = () => (
   <Provider store={store}>
-    <Articles />
-    <News />
+    <div className="container">
+      <div className="row">
+        <div className="col d-flex justify-content-center">
+          <Articles />
+          <News />
+        </div>
+      </div>
+    </div>
   </Provider>
 );
 

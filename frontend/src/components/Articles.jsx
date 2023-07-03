@@ -6,18 +6,14 @@ const Articles = () => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col d-flex justify-content-center">
-          <Button variant="warning" onClick={() => setModalShow(true)}>Добавить новость</Button>
-          <ModalForm
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
-        </div>
-      </div>
+    <>
+      <Button variant="warning" onClick={() => setModalShow(true)}>Добавить новость</Button>
+      <ModalForm
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
       <hr />
-    </div>
+    </>
   );
 };
 

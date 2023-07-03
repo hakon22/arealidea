@@ -10,7 +10,7 @@ const News = () => {
     dispatch(fetchLoading());
   }, [dispatch]);
 
-  const { loadingStatus } = useSelector((state) => state.articles);
+  const { loadingStatus, entities } = useSelector((state) => state.articles);
 
   return loadingStatus !== 'finish'
     ? (
@@ -18,7 +18,20 @@ const News = () => {
         <Spinner animation="border" variant="primary" role="status" />
       </div>
     )
-    : (null);
+    : (
+      entities.map((news) => (
+        <div key={news.id} className="card">
+          <h5 className="card-header">{news.title}</h5>
+          <div className="card-body">
+            <p className="card-text">{news.article}</p>
+            <a href="index.html" className="btn btn-primary">Перейти куда-нибудь</a>
+          </div>
+          <div className="card-footer text-muted">
+            {news.createdAt}
+          </div>
+        </div>
+      ))
+    );
 };
 
 export default News;

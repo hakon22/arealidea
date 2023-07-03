@@ -1,14 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Sequelize, DataTypes } = require('sequelize');
+require('dotenv').config();
 
 const router = express.Router();
 
 const jsonParser = bodyParser.json();
 // const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-// const db = new Sequelize('postgres://hakon:hakonpass@localhost:5432/test');
-const db = new Sequelize('postgres://hakon22:ZMG5aNQoGQIq8F06GAFzAFeXaTfxeVJ3@dpg-cif043tgkuvq1o378440-a:5432/test_t055');
+const db = new Sequelize(process.env.DB_LOCAL);
+// const db = new Sequelize(process.env.DB_HOST);
 
 const Articles = db.define(
   'Articles',
