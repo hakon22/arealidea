@@ -1,14 +1,18 @@
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import store from '../slices/index.js';
 import Articles from './Articles.jsx';
 import News from './News.jsx';
 
 const App = () => (
   <Provider store={store}>
+    <ToastContainer />
     <div className="container">
       <div className="row">
-        <div className="col d-flex justify-content-center">
-          <Articles />
+        <div className="col">
+          <div className="d-flex justify-content-center">
+            <Articles />
+          </div>
           <News />
         </div>
       </div>

@@ -3,24 +3,22 @@ import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/too
 import routes from '../routes.js';
 
 export const fetchLoading = createAsyncThunk(
-  'loading/fetchLoading',
+  'articles/fetchLoading',
   async () => {
     const res = await axios.get(routes.all);
     return res.data;
   },
 );
 
-const loadingAdapter = createEntityAdapter({});
+const articlesAdapter = createEntityAdapter({});
 
-const loadingSlice = createSlice({
+const articlesSlice = createSlice({
   name: 'articles',
   initialState: {
     loadingStatus: 'idle', error: null, ids: [], entities: {},
   },
   reducers: {
-    addMessage: (state, { payload }) => {
-      state.messages.push(payload);
-    },
+    addArticle: articlesAdapter.addOne,
     changeChannel: (state, { payload }) => {
       state.currentChannelId = payload;
     },
@@ -60,6 +58,6 @@ const loadingSlice = createSlice({
   },
 });
 
-export const selectors = loadingAdapter.getSelectors((state) => state.articles);
-export const { actions } = loadingSlice;
-export default loadingSlice.reducer;
+export const selectors = articlesAdapter.getSelectors((state) => state.articles);
+export const { actions } = articlesSlice;
+export default articlesSlice.reducer;

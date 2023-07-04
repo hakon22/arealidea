@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
+import { Bucket } from 'react-bootstrap-icons';
 import { fetchLoading } from '../slices/articlesSlice.js';
 
 const News = () => {
@@ -20,11 +21,14 @@ const News = () => {
     )
     : (
       entities.map((news) => (
-        <div key={news.id} className="card">
-          <h5 className="card-header">{news.title}</h5>
+        <div key={news.id} className="card mt-4">
+          <h5 className="card-header">
+            {news.title}
+            <Bucket />
+          </h5>
           <div className="card-body">
             <p className="card-text">{news.article}</p>
-            <a href="index.html" className="btn btn-primary">Перейти куда-нибудь</a>
+            <a href="index.html" className="btn btn-outline-primary btn-sm">Комментировать</a>
           </div>
           <div className="card-footer text-muted">
             {news.createdAt}

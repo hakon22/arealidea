@@ -2,22 +2,40 @@ import {
   Button, Form, FloatingLabel, Modal,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import axios from 'axios';
+import { actions } from '../slices/articlesSlice.js';
 import routes from '../routes.js';
 
+const notify = (text, type) => toast[type](text);
+
 const ModalForm = (props) => {
+  const { show, onHide } = props;
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       title: '',
       article: '',
     },
-    onSubmit: async (values) => {
-      const res = await axios.post(routes.add, values);
-      console.log(res);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const res = await axios.post(routes.add, values);
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(actions.addArticle(res.data));
+          resetForm();
+          onHide();
+          notify('Новость добавлена!', 'success');
+        } else {
+          notify('Произошла ошибка', 'error');
+        }
+      } catch (e) {
+        notify('Произошла ошибка', 'error');
+      }
     },
   });
-
-  const { show, onHide } = props;
 
   return (
     <Modal
@@ -77,7 +95,7 @@ const ModalForm = (props) => {
             </FloatingLabel>
           </Form.Group>
           <Modal.Footer>
-            <div className="col-9">
+            <div className="col-lg-9 col-md-3">
               <Button variant="primary" className="w-100" type="submit">Добавить</Button>
             </div>
             <Button variant="secondary" onClick={onHide}>Закрыть</Button>
