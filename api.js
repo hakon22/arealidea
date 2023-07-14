@@ -47,7 +47,7 @@ router.post('/api/article-add', jsonParser, async (req, res) => {
   }
 });
 
-router.get('/api/article-delete/:id', jsonParser, async (req, res) => {
+router.delete('/api/article-delete/:id', jsonParser, async (req, res) => {
   try {
     const { id } = req.params;
     await Articles.destroy({ where: { id } });

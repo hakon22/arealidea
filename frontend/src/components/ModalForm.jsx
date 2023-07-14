@@ -22,7 +22,6 @@ const ModalForm = (props) => {
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await axios.post(routes.add, values);
-        console.log(res);
         if (res.status === 200) {
           dispatch(actions.addArticle(res.data));
           resetForm();
@@ -101,6 +100,56 @@ const ModalForm = (props) => {
             <Button variant="secondary" onClick={onHide}>Закрыть</Button>
           </Modal.Footer>
         </Form>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+export const ModalDelete = (props) => {
+  const { show, onHide, id } = props;
+  const dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues: {},
+    onSubmit: async () => {
+      try {
+        const res = await axios.delete(`${routes.delete}${id}`);
+        if (res.status === 201) {
+          dispatch(actions.removeArticle(id));
+          onHide();
+          notify('Новость удалена!', 'success');
+        } else {
+          notify('Произошла ошибка', 'error');
+        }
+      } catch (e) {
+        notify('Произошла ошибка', 'error');
+      }
+    },
+  });
+
+  return (
+    <Modal show={show} onHide={onHide} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Удаление новости</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p className="lead">Точно удалить?</p>
+        <div className="d-flex justify-content-end">
+          <Form
+            onSubmit={formik.handleSubmit}
+          >
+            <Button className="me-2" variant="secondary" onClick={onHide}>
+              Закрыть
+            </Button>
+            <Button
+              variant="danger"
+              type="submit"
+              disabled={formik.isSubmitting}
+            >
+              Удалить
+            </Button>
+          </Form>
+        </div>
       </Modal.Body>
     </Modal>
   );
