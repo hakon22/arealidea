@@ -14,14 +14,11 @@ const articlesAdapter = createEntityAdapter({});
 
 const articlesSlice = createSlice({
   name: 'articles',
-  initialState: {
-    loadingStatus: 'idle', error: null, ids: [], entities: {},
-  },
+  initialState: articlesAdapter.getInitialState({
+    loadingStatus: 'idle', error: null,
+  }),
   reducers: {
     addArticle: articlesAdapter.addOne,
-    changeChannel: (state, { payload }) => {
-      state.currentChannelId = payload;
-    },
     addChannel: (state, { payload }) => {
       state.channels.push(payload);
     },
@@ -38,8 +35,7 @@ const articlesSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchLoading.fulfilled, (state, { payload }) => {
-        state.entities = payload;
-        state.ids = payload.map((value) => value.id);
+        articlesAdapter.addMany(state, payload);
         state.loadingStatus = 'finish';
         state.error = null;
       })

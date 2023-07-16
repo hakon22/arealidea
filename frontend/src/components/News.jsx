@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
 import { Bucket } from 'react-bootstrap-icons';
-import { fetchLoading } from '../slices/articlesSlice.js';
+import { fetchLoading, selectors } from '../slices/articlesSlice.js';
 import { ModalDelete } from './ModalForm.jsx';
 
 const News = () => {
@@ -13,7 +13,8 @@ const News = () => {
     dispatch(fetchLoading());
   }, [dispatch]);
 
-  const { loadingStatus, entities } = useSelector((state) => state.articles);
+  const { loadingStatus } = useSelector((state) => state.articles);
+  const articles = useSelector(selectors.selectAll);
 
   return loadingStatus !== 'finish'
     ? (
@@ -22,7 +23,7 @@ const News = () => {
       </div>
     )
     : (
-      entities.map((news) => (
+      articles.map((news) => (
         <div key={news.id} className="card mt-4">
           <h5 className="card-header d-flex justify-content-between align-items-center">
             {news.title}
