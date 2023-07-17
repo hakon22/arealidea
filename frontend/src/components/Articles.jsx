@@ -6,14 +6,14 @@ const Articles = () => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
-    <>
+    <div className="text-center">
       <Button variant="warning" onClick={() => setModalShow(true)}>Добавить новость</Button>
       <ModalForm
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
-      <hr />
-    </>
+      <hr className="mt-4" />
+    </div>
   );
 };
 

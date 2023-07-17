@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Spinner } from 'react-bootstrap';
-import { Bucket } from 'react-bootstrap-icons';
+import { Spinner, Badge } from 'react-bootstrap';
+import { Bucket, ChatDots, Heart } from 'react-bootstrap-icons';
 import { fetchLoading, selectors } from '../slices/articlesSlice.js';
 import { ModalDelete } from './ModalForm.jsx';
 
@@ -38,8 +38,18 @@ const News = () => {
             <p className="card-text">{news.article}</p>
             <a href="index.html" className="btn btn-outline-primary btn-sm">Комментировать</a>
           </div>
-          <div className="card-footer text-muted">
+          <div className="card-footer text-muted d-flex justify-content-between align-items-center">
             {news.createdAt}
+            <span className="position-relative">
+              <Heart className="fs-4" role="button" />
+              <Badge bg="secondary" className="position-absolute top-0 start-100 translate-middle">9</Badge>
+              <span className="visually-hidden">Лайки</span>
+            </span>
+            <span className="position-relative">
+              <ChatDots className="fs-4" role="button" />
+              <Badge bg="secondary" className="position-absolute top-0 start-100 translate-middle">9</Badge>
+              <span className="visually-hidden">Комментарии</span>
+            </span>
           </div>
         </div>
       ))

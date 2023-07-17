@@ -8,11 +8,9 @@ const App = () => (
   <Provider store={store}>
     <ToastContainer />
     <div className="container">
-      <div className="row">
-        <div className="col">
-          <div className="d-flex justify-content-center">
-            <Articles />
-          </div>
+      <div className="row d-flex justify-content-center">
+        <Articles />
+        <div className="w-75">
           <News />
         </div>
       </div>

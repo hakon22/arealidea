@@ -1,3 +1,9 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .ps-32 {
   padding-left: 2rem;
 }
@@ -6,7 +12,6 @@
   margin: 0;
 }
 
-h5 svg {
-  vertical-align: -.125em;
-  margin-right: 0.2em;
+hr {
+  margin-bottom: 0;
 }
