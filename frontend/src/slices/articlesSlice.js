@@ -19,8 +19,11 @@ const articlesSlice = createSlice({
   }),
   reducers: {
     addArticle: articlesAdapter.addOne,
-    addChannel: (state, { payload }) => {
-      state.channels.push(payload);
+    addLike: (state, { payload }) => {
+      state.entities[payload].likes += 1;
+    },
+    removeLike: (state, { payload }) => {
+      state.entities[payload].likes -= 1;
     },
     removeArticle: articlesAdapter.removeOne,
     renameChannel: (state, { payload }) => {

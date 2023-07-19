@@ -10,7 +10,7 @@ const App = () => (
     <div className="container">
       <div className="row d-flex justify-content-center">
         <Articles />
-        <div className="w-75">
+        <div className="col-md-8">
           <News />
         </div>
       </div>
