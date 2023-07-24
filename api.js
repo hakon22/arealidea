@@ -6,10 +6,8 @@ require('dotenv').config();
 const router = express.Router();
 
 const jsonParser = bodyParser.json();
-// const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const db = new Sequelize(process.env.DB_LOCAL);
-// const db = new Sequelize(process.env.DB_HOST);
+const db = process.env.DB === 'LOCAL' ? new Sequelize(process.env.DB_LOCAL) : new Sequelize(process.env.DB_HOST);
 
 const Articles = db.define(
   'Articles',
@@ -88,18 +86,6 @@ const Comments = db.define(
   },
 );
 
-const connect = async () => {
-  try {
-    await db.authenticate();
-    await db.sync();
-    console.log('Соединение с БД было успешно установлено');
-  } catch (e) {
-    console.log('Невозможно выполнить подключение к БД: ', e);
-  }
-};
-
-connect();
-
 router.post('/api/article-add', jsonParser, async (req, res) => {
   try {
     const { title, article } = req.body;
@@ -149,4 +135,4 @@ router.get('/api/article-all', jsonParser, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = { router, db };

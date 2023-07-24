@@ -4,11 +4,11 @@ import { Spinner, Badge } from 'react-bootstrap';
 import { Bucket, ChatDots, Heart } from 'react-bootstrap-icons';
 import axios from 'axios';
 import cn from 'classnames';
-import { actions, fetchLoading, selectors } from '../slices/articlesSlice.js';
+import { fetchLoading, selectors } from '../slices/articlesSlice.js';
 import { ModalDelete } from './ModalForm.jsx';
 import routes from '../routes.js';
 
-const News = () => {
+const News = ({ socketApi }) => {
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
 
@@ -22,13 +22,13 @@ const News = () => {
   const addLike = async (id) => {
     const isLike = localStorage.getItem(`news_${id}`);
     if (isLike) {
-      await axios.get(`${routes.removeLike}${id}`);
-      dispatch(actions.removeLike(id));
       localStorage.removeItem(`news_${id}`);
+      await axios.get(`${routes.removeLike}${id}`);
+      socketApi.removeLike(id);
     } else {
-      await axios.get(`${routes.addLike}${id}`);
-      dispatch(actions.addLike(id));
       window.localStorage.setItem(`news_${id}`, 'like');
+      await axios.get(`${routes.addLike}${id}`);
+      socketApi.addLike(id);
     }
   };
 
@@ -39,7 +39,7 @@ const News = () => {
       </div>
     )
     : (
-      articles.sort((news) => news.id).map((news) => {
+      articles.sort((a, b) => a.id < b.id).map((news) => {
         const isLike = localStorage.getItem(`news_${news.id}`);
         return (
           <div key={news.id} className="card mt-4">

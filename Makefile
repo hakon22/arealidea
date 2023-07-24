@@ -8,7 +8,10 @@ start-frontend:
 	npm -C frontend start
 
 start:
-	node server.js
+	npm start
+
+start-local:
+	npm run start-local
 
 build:
 	npm run build --prefix frontend
