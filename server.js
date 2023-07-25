@@ -28,6 +28,8 @@ io.on('connection', (socket) => {
 
   socket.on('addLike', (like) => io.emit('addLike', like));
   socket.on('removeLike', (like) => io.emit('removeLike', like));
+  socket.on('addArticle', (article) => io.emit('addArticle', article));
+  socket.on('removeArticle', (article) => io.emit('removeArticle', article));
 });
 
 server.listen(port, () => {

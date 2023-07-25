@@ -1,4 +1,5 @@
 import { Provider } from 'react-redux';
+import { useMemo, useCallback } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { io } from 'socket.io-client';
 import store from '../slices/index.js';
@@ -9,26 +10,33 @@ import ApiContext from './Context.jsx';
 
 const App = () => {
   const socket = io();
-  const socketConnect = (param, arg) => socket.emit(param, arg);
-  const socketApi = {
+  const socketConnect = useCallback((param, arg) => {
+    socket.emit(param, arg);
+  }, [socket]);
+  const socketApi = useMemo(() => ({
     addLike: (like) => socketConnect('addLike', like),
     removeLike: (like) => socketConnect('removeLike', like),
-  };
+    addArticle: (article) => socketConnect('addArticle', article),
+    removeArticle: (article) => socketConnect('removeArticle', article),
+  }), [socketConnect]);
+
   socket.on('addLike', (data) => store.dispatch(actions.addLike(data)));
   socket.on('removeLike', (data) => store.dispatch(actions.removeLike(data)));
+  socket.on('addArticle', (data) => store.dispatch(actions.addArticle(data)));
+  socket.on('removeArticle', (data) => store.dispatch(actions.removeArticle(data)));
   return (
     <Provider store={store}>
-      <ToastContainer />
-      <div className="container">
-        <div className="row d-flex justify-content-center">
-          <ApiContext.Provider value={socketApi}>
+      <ApiContext.Provider value={socketApi}>
+        <ToastContainer />
+        <div className="container">
+          <div className="row d-flex justify-content-center">
             <Articles />
             <div className="col-md-8">
-              <News socketApi={socketApi} />
+              <News />
             </div>
-          </ApiContext.Provider>
+          </div>
         </div>
-      </div>
+      </ApiContext.Provider>
     </Provider>
   );
 };

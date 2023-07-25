@@ -2,17 +2,16 @@ import {
   Button, Form, FloatingLabel, Modal,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { actions } from '../slices/articlesSlice.js';
+import ApiContext from './Context.jsx';
 import routes from '../routes.js';
 
 const notify = (text, type) => toast[type](text);
 
-const ModalForm = (props) => {
-  const { show, onHide } = props;
-  const dispatch = useDispatch();
+const ModalForm = ({ show, onHide }) => {
+  const { addArticle } = useContext(ApiContext);
 
   const formik = useFormik({
     initialValues: {
@@ -23,7 +22,7 @@ const ModalForm = (props) => {
       try {
         const res = await axios.post(routes.add, values);
         if (res.status === 200) {
-          dispatch(actions.addArticle(res.data));
+          addArticle(res.data);
           resetForm();
           onHide();
           notify('Новость добавлена!', 'success');
@@ -105,9 +104,8 @@ const ModalForm = (props) => {
   );
 };
 
-export const ModalDelete = (props) => {
-  const { show, onHide, id } = props;
-  const dispatch = useDispatch();
+export const ModalDelete = ({ show, onHide, id }) => {
+  const { removeArticle } = useContext(ApiContext);
 
   const formik = useFormik({
     initialValues: {},
@@ -115,7 +113,7 @@ export const ModalDelete = (props) => {
       try {
         const res = await axios.delete(`${routes.delete}${id}`);
         if (res.status === 201) {
-          dispatch(actions.removeArticle(id));
+          removeArticle(id);
           onHide();
           notify('Новость удалена!', 'success');
         } else {
