@@ -26,12 +26,12 @@ const News = () => {
     const isLike = localStorage.getItem(`news_${id}`);
     if (isLike) {
       localStorage.removeItem(`news_${id}`);
-      await axios.get(`${routes.removeLike}${id}`);
       removeLike(id);
+      await axios.get(`${routes.removeLike}${id}`);
     } else {
       window.localStorage.setItem(`news_${id}`, 'like');
-      await axios.get(`${routes.addLike}${id}`);
       addLike(id);
+      await axios.get(`${routes.addLike}${id}`);
     }
   };
 
@@ -44,7 +44,7 @@ const News = () => {
     : (
       <>
         <ModalDelete show={modalShow} onHide={() => setModalShow(false)} id={currentId} />
-        {articles.sort((a, b) => a.id < b.id).map((news) => {
+        {articles.sort((a, b) => b.id - a.id).map((news) => {
           const isLike = localStorage.getItem(`news_${news.id}`);
           return (
             <div key={news.id} className="card mt-4 anim-show">
